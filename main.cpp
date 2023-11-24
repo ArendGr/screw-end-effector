@@ -16,8 +16,6 @@
 * 8. Schroef Aanwezig? BOOL
 */
 
-//updete test
-
 int main()
 {
     // Initialise the digital pin LED1 as an output
