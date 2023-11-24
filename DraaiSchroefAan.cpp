@@ -10,7 +10,7 @@ while (true) {
     switch(AandraaiStatus) { //Deze switchcase kan de status switchen tussen idle, Zachtdraaien, Normaaldraaien en Harddraaien
 
         case idle: // in deze staat gebeurd er niks en staat de motor uit
-ScrewEndEffectorInformatie.set_RPMmotor() = 0;
+        ScrewEndEffectorInformatie.set_RPMmotor(0);
 
         break;
         case ZachtDraaien: // in deze staat draait de motor op gedefinieerde "langzame" snelheid
