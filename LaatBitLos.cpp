@@ -1,22 +1,19 @@
 #include "ScrewEndEffectorInformatie.h"
 
-void PakBitVas(ScrewEndEffectorInformatie screwendeffector) 
+void LaatBitLos(ScrewEndEffectorInformatie screwendeffector) 
 {
-    bool PositieBereikt = false;
-
-    while (!PositieBereikt) 
+    while (screwendeffector.get_SchroefAandrukStatus() == 1) // zo lang er geen druk op de kop is
     {
-        // arm gaat 1 mm naar benenden 
-
-        if (screwendeffector.get_SchroefAandrukStatus() <= 2) 
-        {
-            screwendeffector.set_BitjesKlemOpen(true);
-            PositieBereikt = true;
-        }
-    
+        // arm gaat naar benenden 
     }
+
+    screwendeffector.set_BitjesKlemOpen(true); // zet de bitjes klem open
 
     // arm gaat naar boven
 
-    screwendeffector.set_BitjesKlemOpen(false);
+    wait_ns(3000); // wacht 3 seconden
+
+    // zet arm stil
+
+    screwendeffector.set_BitjesKlemOpen(false); // zet de bitjes klem dicht
 }
