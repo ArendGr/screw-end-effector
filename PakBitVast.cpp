@@ -1,6 +1,6 @@
 #include "ScrewEndEffectorInformatie.h"
 
-void PakBitVas(ScrewEndEffectorInformatie screwendeffector) 
+void PakBitVas(ScrewEndEffectorInformatie& screwendeffector) 
 {
     screwendeffector.set_BitjesKlemOpen(true); // zet de bitjes klem open
 

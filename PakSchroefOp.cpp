@@ -1,6 +1,6 @@
 #include "ScrewEndEffectorInformatie.h"
 
-void PakSchrofOp(ScrewEndEffectorInformatie screwendeffector) 
+void PakSchrofOp(ScrewEndEffectorInformatie& screwendeffector) 
 {
     screwendeffector.set_RPMmotor(10); // zet de motor rpm op 10 
 

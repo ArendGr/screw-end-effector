@@ -1,6 +1,6 @@
 #include "ScrewEndEffectorInformatie.h"
 
-void LaatBitLos(ScrewEndEffectorInformatie screwendeffector) 
+void LaatBitLos(ScrewEndEffectorInformatie& screwendeffector) 
 {
     while (screwendeffector.get_SchroefAandrukStatus() == 1) // zo lang er geen druk op de kop is
     {

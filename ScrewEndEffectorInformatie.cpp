@@ -18,7 +18,7 @@ void ScrewEndEffectorInformatie::set_SchroefAandrukStatus(int schroefaandrukstat
     SchroefAandrukStatus = schroefaandrukstatus;
 }
 
-void ScrewEndEffectorInformatie::set_SchroefLengte(double schroeflengte) {
+void ScrewEndEffectorInformatie::set_SchroefLengte(int schroeflengte) {
     SchroefLengte = schroeflengte;
 }
 
