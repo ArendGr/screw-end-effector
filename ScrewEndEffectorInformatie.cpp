@@ -17,3 +17,15 @@ void ScrewEndEffectorInformatie::set_RPMmotor(double rpmmotor) {
 void ScrewEndEffectorInformatie::set_SchroefAandrukStatus(int schroefaandrukstatus) {
     SchroefAandrukStatus = schroefaandrukstatus;
 }
+
+void ScrewEndEffectorInformatie::set_SchroefLengte(double schroeflengte) {
+    SchroefLengte = schroeflengte;
+}
+
+void ScrewEndEffectorInformatie::set_Schroefaanwezig(bool schroefaanweezig) {
+    SchroefAanweezig = schroefaanweezig;
+}
+
+void ScrewEndEffectorInformatie::set_BitjeAanweezig(bool bitjeaanweezig) {
+    BitjeAanweezig = bitjeaanweezig;
+}
