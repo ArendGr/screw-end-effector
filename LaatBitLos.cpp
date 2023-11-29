@@ -6,10 +6,9 @@ void PakBitVas(ScrewEndEffectorInformatie screwendeffector)
 
     while (!PositieBereikt) 
     {
-    // arm gaat 1 mm naar benenden 
-    if (get_)
-    // functie die kijkt of de eindpositie bereikt is
-        if (true) // dit kunnen we niet inplementeren omdat we deze info niet hebben, daarom is true
+        // arm gaat 1 mm naar benenden 
+
+        if (screwendeffector.get_SchroefAandrukStatus() <= 2) 
         {
             screwendeffector.set_BitjesKlemOpen(true);
             PositieBereikt = true;
