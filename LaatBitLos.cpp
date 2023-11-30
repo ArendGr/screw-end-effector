@@ -12,6 +12,7 @@ void LaatBitLos(ScrewEndEffectorInformatie& screwendeffector)
     // arm gaat naar boven
 
     wait_ns(3000); // wacht 3 seconden
+    
 
     // zet arm stil
 

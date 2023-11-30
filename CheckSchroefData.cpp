@@ -2,36 +2,39 @@
 
 bool CheckSchroefData(ScrewEndEffectorInformatie& screwendeffector) 
 {
-    enum Schroefstatus { GeenBitjeAanwezig, BitjeAanwezig, SchroefAanwezig};
-    Schroefstatus schroefstatus = GeenBitjeAanwezig;
-    int schroeflengte = 100;
+    enum MeetStatus { GeenBitjeAanwezig, BitjeAanwezig, SchroefAanwezig};
+    MeetStatus meetstatus = GeenBitjeAanwezig;
+
+    // arm moet 100 mm boven de conductor plaat
+    int meetresultaatinmm = 100; // het meetresultaat is 100mm
 
     while (screwendeffector.get_SchroefTouch() == false) // zo lang de schroef plaat niet aangeraakt is
     {
-        schroeflengte --;
+        meetresultaatinmm --; // het meet resultaat word 1 kleiner
         // arm gaat 1 mm naar benenden 
+        thread_sleep_for(100); // wacht 0.1 seconden
     }
 
-    // arm gaat schroeflengte naar boven
+    // arm gaat terug naar start pozietie
 
-    if (schroeflengte == screwendeffector.BitjesLengte) {
-        schroefstatus = BitjeAanwezig;
+    if (meetresultaatinmm == screwendeffector.BitjesLengte) { // als het meet resultaat gelijk is aan lengte van het bitje
+        meetstatus = BitjeAanwezig; // de meet status is bitje aanwaanwezig 
     }
 
-    else if (schroeflengte == (screwendeffector.BitjesLengte + screwendeffector.VerwachteSchroefLengte)){
-        schroefstatus = SchroefAanwezig;
+    else if (meetresultaatinmm == (screwendeffector.BitjesLengte + screwendeffector.VerwachteSchroefLengte)){ // anders als het meet resultaat gelijk is aan de lengte van de schroef en het bitje
+        meetstatus = SchroefAanwezig; // de meet status is schroef aanwaanwezig 
     }
 
-    else if (schroeflengte == 0) {
-        schroefstatus = GeenBitjeAanwezig;
+    else if (meetresultaatinmm == 0) { // anders als het meetrsultaat gelijk is aan nul
+        meetstatus = GeenBitjeAanwezig; // de meet status is geen bitje aanwezig
     }
 
-    else {
-        return false;
+    else { // anders 
+        return false; // geef fout terug
     }
 
 
-    switch(schroefstatus)
+    switch(meetstatus)
     {
         case GeenBitjeAanwezig:
 
@@ -49,7 +52,7 @@ bool CheckSchroefData(ScrewEndEffectorInformatie& screwendeffector)
 
             screwendeffector.set_BitjeAanweezig(true);
             screwendeffector.set_Schroefaanwezig(true);
-            screwendeffector.set_SchroefLengte(schroeflengte);
+            screwendeffector.set_SchroefLengte(meetresultaatinmm);
             return true;
 
     }
