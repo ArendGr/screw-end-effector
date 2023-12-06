@@ -1,5 +1,6 @@
 #include "mbed.h"
 #include "ScrewEndEffectorInformatie.h"
+#include "Motorcontrol.h"
 
 // In de hieronder geschreven code wordt gebruikt gemaakt van het woord "motor", hiermee wordt de motor bedoelt die de schroef moet laten draaien
 enum AandraaiStatus{ idle, ZachtDraaien, NormaalDraaien, HardDraaien}; // alle verschillende cases waartussen geswitched kan worden
@@ -20,7 +21,7 @@ bool Schroefmoment(int& mmIngedrukt) { // Hier wordt bepaald naar welke staat va
     }
 
 }
-wwz
+
 
 bool DraaiSchroefAan(){ // De boolean geeft aan of het uitvoeren van de functie gelukt is met true
 
