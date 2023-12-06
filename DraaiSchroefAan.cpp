@@ -3,6 +3,9 @@
 
 // In de hieronder geschreven code wordt gebruikt gemaakt van het woord "motor", hiermee wordt de motor bedoelt die de schroef moet laten draaien
 enum AandraaiStatus{ idle, ZachtDraaien, NormaalDraaien, HardDraaien}; // alle verschillende cases waartussen geswitched kan worden
+AandraaiStatus status = idle;
+
+ScrewEndEffectorInformatie informatie;
 
 Timer statuscheck;
 
@@ -17,7 +20,7 @@ bool Schroefmoment(int& mmIngedrukt) { // Hier wordt bepaald naar welke staat va
     }
 
 }
-
+wwz
 
 bool DraaiSchroefAan(){ // De boolean geeft aan of het uitvoeren van de functie gelukt is met true
 
@@ -27,7 +30,6 @@ bool DraaiSchroefAan(){ // De boolean geeft aan of het uitvoeren van de functie 
     int Fouten = 0;
 
     statuscheck.start(); // begin met tellen
-    AandraaiStatus AandraaiStatus_state = AandraaiStatus::ZachtDraaien;
 
 // Hieronder staat een while loop, dit blijft aan totdat het aandraaien van de schroef gelukt is of er een foutmelding gegeven wordt
 while (true) {
@@ -39,10 +41,11 @@ while (true) {
 
     if (statuscheck.read_ms() > 100) { // Wacht minstens 0.1s voordat er van case geswitched kan worden
         mmIngedrukt++; // Als eerste wordt de switch van ZachtDraaien aangehouden, dan na 0.1s komt de functie hier om de status te evalueren, maar is de schroef er al wel 1mm ingedrukt
-        if (!Schroefmoment(int mmIngedrukt)) { 
+        if (!Schroefmoment(mmIngedrukt)) { 
             mmIngedrukt = mmIngedrukt - 1; // De schroef heeft nog geen contact gemaakt, probeer opnieuw
             Fouten++; // Er is +1 fout opgetreden
         }
+        statuscheck.reset();
     }
 
     if (Fouten > 2) { // Er zijn 3 foute pogingen gemaakt, Er is iets mis, dus return met niets
@@ -50,10 +53,10 @@ while (true) {
         break;
     }
 
-    switch(AandraaiStatus) { //Deze switchcase kan de status switchen tussen idle (niet draaien), Zachtdraaien, Normaaldraaien en Harddraaien
+    switch(status) { //Deze switchcase kan de status switchen tussen idle (niet draaien), Zachtdraaien, Normaaldraaien en Harddraaien
 
         case idle: // in deze staat gebeurd er niks en staat de motor uit
-        ScrewEndEffectorInformatie.set_RPMmotor(0);
+        informatie.set_RPMmotor(0);
         // Functie: Duw de schroef met 0 m/s aan
         if (SchroefIsErin == true) { // Als de schroef erin is, dan wordt deze boolean functie teruggeven met true, hierboven wordt de RPM al op 0 gezet
             // Functie: laat schroef los
