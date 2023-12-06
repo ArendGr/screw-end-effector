@@ -1,17 +1,28 @@
 #include "mbed.h"
 
 class ArmInformatie { // Dit is de informatie die van de arm naar de ScrewEndEffector
-private:
-bool BitLosLaten; // Moet de bit wel/niet losgelaten worden
-bool StartDraaien; // Moet er beginnen worden met draaien
-
 public:
-//setters
-void set_BitLosLaten( bool bitloslaten );
-void set_StartDraaien( bool startdraaien );
 
-//getters
-bool get_BitLosLaten(){ return BitLosLaten; };
-bool get_StartDraaien(){ return StartDraaien; }; 
+enum Status
+{
+    Wacht,
+    Pak_bitje,
+    Pak_schroef,
+    Verwijder_bitje,
+    Verwijder_schroef,
+    Schroeven,
+    Meten
+};
 
+void set_Request_Status(Status status);
+
+Status get_Actual_Status();
+
+private:
+
+Status Request_Status;
+Status Actual_Status;
+
+double Xpozitie, Ypozitie, Zpozitie;
+   
 };

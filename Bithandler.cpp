@@ -1,7 +1,9 @@
-//Pak bit vast
-
 #include "mbed.h"
 #include "ScrewEndEffectorInformatie.h"
+
+//Pak bit vast
+
+
 
 void PakBitVast(ScrewEndEffectorInformatie& screwendeffector) 
 {
@@ -27,7 +29,7 @@ void PakBitVast(ScrewEndEffectorInformatie& screwendeffector)
 
 // laat bit los
 
-#include "ScrewEndEffectorInformatie.h"
+
 
 void LaatBitLos(ScrewEndEffectorInformatie& screwendeffector) 
 {
@@ -49,8 +51,6 @@ void LaatBitLos(ScrewEndEffectorInformatie& screwendeffector)
 }
 
 // pak schroef op
-
-#include "ScrewEndEffectorInformatie.h"
 
 void PakSchrofOp(ScrewEndEffectorInformatie& screwendeffector) 
 {

@@ -1,10 +1,12 @@
 #include "ArmInformatie.h"
 // Dit is het tweede gedeelte van de setters
 
-void ArmInformatie::set_BitLosLaten(bool bitloslaten) {
-    BitLosLaten = bitloslaten;
+void ArmInformatie::set_Request_Status(Status status) 
+{
+    Request_Status = status;
 }
 
-void ArmInformatie::set_StartDraaien(bool startdraaien) {
-    StartDraaien = startdraaien;
+ArmInformatie::Status ArmInformatie::get_Actual_Status()
+{
+    return Actual_Status;
 }
