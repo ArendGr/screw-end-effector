@@ -3,15 +3,20 @@
 class ArmInformatie { // Dit is de informatie die van de arm naar de ScrewEndEffector
 public:
 
-class Positie 
-{
-    private:
-    double Positie;
+struct Positie {
     public:
-    double get_Pozitie(){return Positie;}
+    float x;
+    float y;
+    float z;
 };
 
-Positie X,Y,Z;
+
+Positie current;
+Positie oud;
+
+current.x
+
+
 
 enum Status
 {
