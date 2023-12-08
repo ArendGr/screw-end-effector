@@ -1,5 +1,4 @@
 #include "ArmInformatie.h"
-// Dit is het tweede gedeelte van de setters
 
 void ArmInformatie::set_Request_Status(Status status) 
 {

@@ -3,6 +3,16 @@
 class ArmInformatie { // Dit is de informatie die van de arm naar de ScrewEndEffector
 public:
 
+class Pozietie 
+{
+    private:
+    double Pozietie;
+    public:
+    double get_Pozitie(){return Pozietie;}
+};
+
+Pozietie X,Y,Z;
+
 enum Status
 {
     Wacht,
@@ -22,7 +32,5 @@ private:
 
 Status Request_Status;
 Status Actual_Status;
-
-double Xpozitie, Ypozitie, Zpozitie;
-   
+  
 };
