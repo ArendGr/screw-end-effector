@@ -1,19 +1,25 @@
 #include "mbed.h"
+#include "ConductorSensor.h"
 
 class ScrewEndEffectorInformatie { // Dit is de informatie die van de ScrewEndEffector naar de arm gaat
 private:
+ConductorSensor conductorsensor;
+
 // data
 bool BitjesKlemOpen;
-bool SchroefTouch; // Is de schroevendraaier vast in het systeem?
 double RPMmotor; // De RPM van de motor
 int SchroefAandrukStatus; // int 0 = default, int 1 = geen duk, int 2 = minimaale druk, int 3 = goede druk, 4 = maximale druk, 
-int SchroefLengte; 
+double SchroefLengte; 
 bool BitjeAanweezig, SchroefAanweezig;
+double BitjesLengte = 5;
+double VerwachteSchroefLengte = 15;
 
 public:
 //data
-int BitjesLengte = 5;
-int VerwachteSchroefLengte = 15;
+
+
+void do_measurement(double posietie);
+void calibrate_measurement(double posietie);
 
 //setters
 void set_BitjesKlemOpen( bool bitjesklemopen );
