@@ -10,8 +10,7 @@ struct Positie {
 class ArmInformatie { // Dit is de informatie die van de arm naar de ScrewEndEffector
 public:
 
-enum Status
-{
+enum Status {
     Wacht,
     Pak_bitje,
     Pak_schroef,
