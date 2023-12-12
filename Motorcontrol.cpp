@@ -13,7 +13,7 @@ ArmInformatie Arminformatie;
 
 Timer statuscheck;
 
-bool Schroefmoment(int& mmIngedrukt) { // Hier wordt bepaald naar welke staat van het aandraaien van schroef er moet komen te staan
+bool Schroefmoment() { // Hier wordt bepaald naar welke staat van het aandraaien van schroef er moet komen te staan
     //In het geval van een foutmelding, wordt idle meegegeven met dat de schroef er niet in is gekomen, daarin wordt de motor uitgezet en wordt de boolean functie met false teruggestuurd
 
     /*
@@ -23,10 +23,10 @@ bool Schroefmoment(int& mmIngedrukt) { // Hier wordt bepaald naar welke staat va
     * SchroefAandrukStatus() van 3 betekend dat er een te hoge druk is voor het aanschroeven
     */
     
-    if ((mmIngedrukt == 1) && (CEEinformatie.get_SchroefAandrukStatus() == 0)) { // De schroef heeft nog geen contact gemaakt met het contactoppervlak, probeer het nog een keer (3x proberen maximaal)
+    if (CEEinformatie.get_SchroefAandrukStatus() == 0) { // De schroef heeft nog geen contact gemaakt met het contactoppervlak, probeer het nog een keer (3x proberen maximaal)
         return false;
     }
-    else if ((mmIngedrukt == 1) && (CEEinformatie.get_SchroefAandrukStatus() < 1)) { // De schroef heeft contact gemaakt
+    else if (CEEinformatie.get_SchroefAandrukStatus() < 1) { // De schroef heeft contact gemaakt
         status = AandraaiStatus::NormaalDraaien;
         return true;
     }
@@ -52,7 +52,6 @@ void DraaiSchroefAan(){ // De boolean geeft aan of het uitvoeren van de functie 
 
     status = AandraaiStatus::ZachtDraaien; // Hier wordt de staat op zachtdraaien gezet (beginstand bij aanroepen van deze gehele functie)
     bool SchroefIsErin = false; // Dit geeft aan dat de schroef er nog niet in is, omdat de functie net is aangeroepen
-    int mmIngedrukt = 0;
     int Fouten = 0;
     bool fout = false;
 
@@ -66,10 +65,8 @@ while (true) {
     * Dit kan in het uiteindelijke totaalsysteem aangepast worden
     */
 
-    if (statuscheck.read_ms() > 50) { // Wacht minstens 0.05s voordat er van case geswitched kan worden
-        mmIngedrukt++; // Als eerste wordt de switch van ZachtDraaien aangehouden, dan na 0.1s komt de functie hier om de status te evalueren, maar is de schroef er al wel 1mm ingedrukt
-        if (!Schroefmoment(mmIngedrukt)) { 
-            mmIngedrukt = mmIngedrukt - 1; // De schroef heeft nog geen contact gemaakt, probeer opnieuw
+    if (statuscheck.read_ms() > 50) { // Wacht minstens 0.05s voordat er van case geswitched kan worden    
+        if (!Schroefmoment()) { 
             fout = true;
             Fouten++; // Er is +1 fout opgetreden
         }
@@ -84,6 +81,7 @@ while (true) {
     if ((Fouten > 2) && fout) { // Er zijn 3 foute pogingen achter elkaar gemaakt, Er is iets mis, nu gaat het programma uit de functie, hier moet later een error functie voor komen
         return;
     }
+
 
     switch(status) { //Deze switchcase kan de status switchen tussen idle (niet draaien), Zachtdraaien, Normaaldraaien en Harddraaien
 

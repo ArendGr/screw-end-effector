@@ -1,8 +1,5 @@
 #include "mbed.h"
 
-class ArmInformatie { // Dit is de informatie die van de arm naar de ScrewEndEffector
-public:
-
 struct Positie {
     public:
     float x;
@@ -10,13 +7,8 @@ struct Positie {
     float z;
 };
 
-
-Positie current;
-Positie oud;
-
-current.x
-
-
+class ArmInformatie { // Dit is de informatie die van de arm naar de ScrewEndEffector
+public:
 
 enum Status
 {
@@ -29,13 +21,27 @@ enum Status
     Meten
 };
 
-void set_Request_Status(Status status);
-
-Status get_Actual_Status();
 
 private:
+Positie huidige;
+Positie oud;
 
 Status Request_Status;
 Status Actual_Status;
   
+
+public:
+    void set_Gemeten_Positie(Positie positie);
+
+    double PositieVerschil(Positie huidige, Positie oud);
+
+    Positie get_Huidige_Positie(Positie huidige);
+    Positie get_Vorige_Positie(Positie oud);
+
+
+    void set_Request_Status(Status status);
+
+    Status get_Actual_Status();
+
+
 };
