@@ -18,8 +18,8 @@ public:
 //data
 
 
-void do_measurement(double posietie);
-void calibrate_measurement(double posietie);
+bool do_measurement(double posietie);
+bool calibrate_measurement(double posietie);
 
 //setters
 void set_BitjesKlemOpen( bool bitjesklemopen );
