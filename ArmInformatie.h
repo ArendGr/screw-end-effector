@@ -34,7 +34,7 @@ public:
 
     double PositieVerschil(Positie huidige, Positie oud);
 
-    Positie get_Huidige_Positie(Positie huidige);
+    Positie get_Huidige_Positie();
     Positie get_Vorige_Positie(Positie oud);
 
 

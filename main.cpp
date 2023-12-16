@@ -4,6 +4,8 @@
 
 #define Timer_Check     500ms //Dit is de tijd dat het programma wacht totdat er weer gekeken kan worden of een bepaalde functie is uitgevoerd
 
+ScrewEndEffectorInformatie screwEndEffectorInformatie;
+ArmInformatie armInformatie;
 /*
 * Verschilldende functies:
 * 1. Pak Bit vast
@@ -29,9 +31,13 @@ int main()
         led = !led;
         ThisThread::sleep_for(Timer_Check);
     }
-}
 
+    armInformatie.set_Request_Status(armInformatie.Meten);
+    while (screwEndEffectorInformatie.calibrate_measurement(armInformatie.get_Huidige_Positie()));
 
-bool PakBitVast() {
+    while (true) 
+    {
+        
 
+    }
 }

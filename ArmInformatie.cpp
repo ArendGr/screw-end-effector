@@ -13,7 +13,7 @@ double PositieVerschil(Positie huidige, Positie oud) {
     return verschil;
 }
 
-Positie ArmInformatie::get_Huidige_Positie(Positie huidige) {
+Positie ArmInformatie::get_Huidige_Positie() {
     return huidige;
 }
 
