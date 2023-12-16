@@ -1,9 +1,13 @@
 #include "mbed.h"
+#include "ArmInformatie.h"
 #include "ConductorSensor.h"
+#include "Bithandler.h"
+
 
 class ScrewEndEffectorInformatie { // Dit is de informatie die van de ScrewEndEffector naar de arm gaat
 private:
 ConductorSensor conductorsensor;
+Bithandler bithandler;
 
 // data
 bool BitjesKlemOpen;
@@ -15,11 +19,14 @@ double BitjesLengte = 5;
 double VerwachteSchroefLengte = 15;
 
 public:
-//data
+//functions
+bool pick_bitje();
+bool drop_bitje();
+bool pick_screw();
 
 
-bool do_measurement(double posietie);
-bool calibrate_measurement(double posietie);
+bool do_measurement(Positie posietie);
+bool calibrate_measurement(Positie posietie);
 
 //setters
 void set_BitjesKlemOpen( bool bitjesklemopen );
