@@ -10,37 +10,55 @@ AandraaiStatus status = idle;
 
 ScrewEndEffectorInformatie CEEinformatie;
 ArmInformatie Arminformatie;
+Positie positie;
 
 Timer statuscheck;
 
-bool Schroefmoment() { // Hier wordt bepaald naar welke staat van het aandraaien van schroef er moet komen te staan
-    //In het geval van een foutmelding, wordt idle meegegeven met dat de schroef er niet in is gekomen, daarin wordt de motor uitgezet en wordt de boolean functie met false teruggestuurd
-
-    /*
+ /*
     * SchroefAandrukStatus() van 0 betekend dat er geen druk is gedetecteerd in de sensoren
     * SchroefAandrukStatus() van 1 betekend dat er lichte druk is geidentificeerd
     * SchroefAandrukStatus() van 2 betekend dat er een ideale druk is voor het aanschroeven
     * SchroefAandrukStatus() van 3 betekend dat er een te hoge druk is voor het aanschroeven
     */
-    
-    if (CEEinformatie.get_SchroefAandrukStatus() == 0) { // De schroef heeft nog geen contact gemaakt met het contactoppervlak, probeer het nog een keer (3x proberen maximaal)
+
+bool Schroefmoment() {// Hier wordt bepaald naar welke staat van het aandraaien van schroef er moet komen te staan
+    //In het geval van een foutmelding, wordt idle meegegeven met dat de schroef er niet in is gekomen, daarin wordt de motor uitgezet en wordt de boolean functie met false teruggestuurd
+
+    // Meet de afstand tussen de huidige en vorige positie
+    double afstandsverschil = Arminformatie.PositieVerschil(Arminformatie.get_Huidige_Positie(), Arminformatie.get_Vorige_Positie(positie));
+
+    if (CEEinformatie.get_SchroefAandrukStatus() == 0 && afstandsverschil > 0.1) { 
+        // Geen druk gedetecteerd en schroef heeft nog geen contact gemaakt met het contactoppervlak
         return false;
-    }
-    else if (CEEinformatie.get_SchroefAandrukStatus() < 1) { // De schroef heeft contact gemaakt
+    } else if (CEEinformatie.get_SchroefAandrukStatus() == 1 && (status == ZachtDraaien)) { 
+        // Lichte druk gedetecteerd en schroef heeft contact gemaakt
         status = AandraaiStatus::NormaalDraaien;
         return true;
+    } else if (CEEinformatie.get_SchroefAandrukStatus() == 1 && ((status == NormaalDraaien) || (status == HardDraaien))) {
+        // Lichte druk gedetecteerd en we zijn in de NormaalDraaien-status
+        if (afstandsverschil > 0.1) { // als de schroef lekker bezig is, mag die harder gaan.. is efficienter
+        status = AandraaiStatus::HardDraaien;
+        }
+        return true;
+    } else if (CEEinformatie.get_SchroefAandrukStatus() == 3 && (status == HardDraaien)) {
+        // Ideale druk gedetecteerd en we zijn in de NormaalDraaien-status
+        status = AandraaiStatus::ZachtDraaien;
+        return true;
+    } else if (CEEinformatie.get_SchroefAandrukStatus() == 2 && (status == NormaalDraaien)) {
+        // Ideale druk gedetecteerd en we zijn in de NormaalDraaien-status
+        return true;
+    } else if (CEEinformatie.get_SchroefAandrukStatus() == 3 && (status == NormaalDraaien)) {
+        // Te hoge druk gedetecteerd en we zijn in de NormaalDraaien-status
+        // Stop de motor en geef een foutmelding
+        CEEinformatie.set_RPMmotor(0);
+        status = AandraaiStatus::idle;
+        return false;
     }
-
-    if (() && ()) {
-
-
+    else if (CEEinformatie.get_SchroefAandrukStatus() == 3 && (status == idle)) {
+        // hoge druk met geen snelheid
+        return false;
     }
-
-    if (() && ()) {
-
-
-    }
-
+    return true;
 }
 
 double ArmDuwSnelheid () {
