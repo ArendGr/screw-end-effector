@@ -50,37 +50,15 @@ bool ScrewEndEffectorInformatie::pick_screw()
 
  
 
-bool ScrewEndEffectorInformatie::do_measurement(Positie posietie)
+double ScrewEndEffectorInformatie::do_measurement(Positie positie)
 {
     if (conductorsensor.get_Touch() == true)
     {
-        double measurement = conductorsensor.calculate_Length(posietie.y);
-
-        if (measurement == BitjesLengte) // als het meet resultaat gelijk is aan lengte van het bitje
-        { 
-            BitjeAanweezig = true; // bitje is aanweezig 
-            SchroefAanweezig = false; // Schroef is niet aanweezig
-        }
-
-        else if (measurement > (BitjesLengte + 1)) // anders als het meet resultaat gelijk is aan de lengte van de schroef en het bitje
-        { 
-            BitjeAanweezig = true; // bitje is aanweezig
-            SchroefAanweezig = true; // Schroef is aanweezig
-            SchroefLengte = measurement - BitjesLengte;
-        }
-
-        else if (measurement == 0) // anders als het meetrsultaat gelijk is aan nul
-        { 
-            BitjeAanweezig = false; // bitje is niet aanweezig
-            SchroefAanweezig = false; // Schroef is niet aanweezig
-        }
-
-        return true;
+        SchroefLengte = conductorsensor.calculate_Length(positie.y);
+        return SchroefLengte;
     }
-
-    else 
-    {
-        return false;
+    else {
+        return -1;
     }
 }
 
