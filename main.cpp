@@ -63,7 +63,11 @@ int main()
             while (!screwEndEffectorInformatie.do_measurement(armInformatie.get_Huidige_Positie()));
         }
 
-        while (!screwEndEffectorInformatie.get_SchroefAanweezig() ) 
+        while (screwEndEffectorInformatie.get_SchroefLengte() != screwEndEffectorInformatie.s) {
+        statements
+        }
+
+        while (!screwEndEffectorInformatie.get_SchroefAanweezig()) 
         {
             armInformatie.set_Request_Status(armInformatie.Pak_bitje);
             while (!screwEndEffectorInformatie.pick_screw());
