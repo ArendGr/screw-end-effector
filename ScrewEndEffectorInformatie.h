@@ -24,8 +24,8 @@ bool drop_bitje();
 bool pick_screw();
 
 
-bool do_measurement(Positie posietie);
-bool calibrate_measurement(Positie posietie);
+double do_measurement(Positie posietie);
+bool calibrate_measurement(Positie positie);
 
 //setters
 void set_BitjesKlemOpen( bool bitjesklemopen );

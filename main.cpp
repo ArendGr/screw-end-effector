@@ -6,6 +6,8 @@
 
 ScrewEndEffectorInformatie screwEndEffectorInformatie;
 ArmInformatie armInformatie;
+
+enum Status {defalt, Verwijder_schroef, Verwijder_bitje, Pak_bitje, Pak_schroef, schroeven}
 /*
 * Verschilldende functies:
 * 1. Pak Bit vast
@@ -18,13 +20,81 @@ ArmInformatie armInformatie;
 * 8. Schroef Aanwezig? BOOL
 */
 
+
+
+
+
+int main()
+{
+
+    double schroefLengte = 15;
+    double bitLengte = 5;
+    double meetTolerantie = .1;
+    double meetResultaat = -1;
+    Status status = Verwijder_schroef;
+
+    bool measure = true;
+    // setup
+
+    while (true) 
+    {   
+        if (measure) 
+        {
+            armInformatie.set_Request_Status(armInformatie.Meten); // zeg tegen de arm dat die moet gaan meten
+
+            meetResultaat = screwEndEffectorInformatie.do_measurement(armInformatie.get_Huidige_Positie());
+            if (meetResultaat != -1) 
+            {
+                measure = false;
+            }
+        }
+        else 
+        {
+            switch (status) 
+            {
+            case Pak_bitje:
+                {
+                    armInformatie.set_Request_Status(armInformatie.Pak_bitje); // zeg tegen de arm dat die een bitje moet gaan op pakken
+
+                    if (screwEndEffectorInformatie.pick_bitje()) // als de arm klaar is met een bitje pakken
+                    {  
+                        status = Pak_schroef; // zet de status op pak een schroef
+                    }
+                    else if (screwEndEffectorInformatie.pick_bitje())
+
+                    break;
+                }
+
+            case Pak_schroef:
+                {
+                    
+                    break;
+                }
+
+            case(schroeven):
+                {
+                    if () 
+                    {
+
+                    }
+
+                    break;
+                }
+            }
+        }
+    }
+
+}
+
+
 int main()
 {
     double schroefLengte = 15;
 
+    
+
     armInformatie.set_Request_Status(armInformatie.Meten); // zeg tegen de arm dat die moet gaan meten
     while (!screwEndEffectorInformatie.do_measurement(armInformatie.get_Huidige_Positie())); // wacht tot de het meten voltooid is 
-    armInformatie.set_Request_Status(armInformatie.Wacht); // zeg tegen de arm dat die moet wachten
 
     while (screwEndEffectorInformatie.get_SchroefAanweezig()) // waneer er een schroef aanweezig is
     {
@@ -45,7 +115,7 @@ int main()
     }
 
     while (true) 
-    {
+    {   
         while (!screwEndEffectorInformatie.get_BitjeAanweezig()) // waneer er geen bitje aanwezig is
         {
             armInformatie.set_Request_Status(armInformatie.Pak_bitje); // zeg tegen de arm dat die een bitje moet gaan op pakken 
