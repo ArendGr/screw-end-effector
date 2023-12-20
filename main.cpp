@@ -33,11 +33,46 @@ int main()
     }
 
     armInformatie.set_Request_Status(armInformatie.Meten);
-    while (screwEndEffectorInformatie.calibrate_measurement(armInformatie.get_Huidige_Positie()));
+    while (!screwEndEffectorInformatie.do_measurement(armInformatie.get_Huidige_Positie()));
+    armInformatie.set_Request_Status(armInformatie.Wacht);
+
+    if (screwEndEffectorInformatie.get_SchroefAanweezig()) 
+    {
+        armInformatie.set_Request_Status(armInformatie.Verwijder_schroef);
+        while (armInformatie.get_Actual_Status() != armInformatie.Verwijder_schroef);
+
+        armInformatie.set_Request_Status(armInformatie.Wacht);
+    }
+
+    if (screwEndEffectorInformatie.get_BitjeAanweezig()) 
+    {
+        armInformatie.set_Request_Status(armInformatie.Verwijder_bitje);
+        while (!screwEndEffectorInformatie.drop_bitje());
+
+        armInformatie.set_Request_Status(armInformatie.Wacht);
+    }
 
     while (true) 
     {
-        
+        while (!screwEndEffectorInformatie.get_BitjeAanweezig()) 
+        {
+            armInformatie.set_Request_Status(armInformatie.Pak_bitje);
+            while (!screwEndEffectorInformatie.pick_bitje());
+
+            armInformatie.set_Request_Status(armInformatie.Meten);
+            while (!screwEndEffectorInformatie.do_measurement(armInformatie.get_Huidige_Positie()));
+        }
+
+        while (!screwEndEffectorInformatie.get_SchroefAanweezig() ) 
+        {
+            armInformatie.set_Request_Status(armInformatie.Pak_bitje);
+            while (!screwEndEffectorInformatie.pick_screw());
+
+            armInformatie.set_Request_Status(armInformatie.Meten);
+            while (!screwEndEffectorInformatie.do_measurement(armInformatie.get_Huidige_Positie()));
+        }
+       
+      
 
     }
 }
