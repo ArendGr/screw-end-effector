@@ -61,12 +61,8 @@ bool Schroefmoment() {// Hier wordt bepaald naar welke staat van het aandraaien 
     return true;
 }
 
-double ArmDuwSnelheid () {
 
-}
-
-
-void DraaiSchroefAan(){ // De boolean geeft aan of het uitvoeren van de functie gelukt is met true
+void DraaiSchroefAan() { // De boolean geeft aan of het uitvoeren van de functie gelukt is met true
 
     status = AandraaiStatus::ZachtDraaien; // Hier wordt de staat op zachtdraaien gezet (beginstand bij aanroepen van deze gehele functie)
     bool SchroefIsErin = false; // Dit geeft aan dat de schroef er nog niet in is, omdat de functie net is aangeroepen
@@ -77,7 +73,7 @@ void DraaiSchroefAan(){ // De boolean geeft aan of het uitvoeren van de functie 
     Positie start;
     Positie huidige;
     statuscheck.start(); // begin met tellen
-    double verschil = -0.1;
+    double verschil = 0; 
     bool error = false;
 
 // Hieronder staat een while loop, dit blijft aan totdat het aandraaien van de schroef gelukt is of er een foutmelding gegeven wordt
