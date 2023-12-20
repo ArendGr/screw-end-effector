@@ -74,13 +74,14 @@ void DraaiSchroefAan(){ // De boolean geeft aan of het uitvoeren van de functie 
     bool fout = false;
     bool aangeraakt = false;
     double schroeflengte;
-
-    Positie Start = Arminformatie.get_Start();
-    Positie huidige = Arminformatie.get_Start();
+    Positie start;
+    Positie huidige;
     statuscheck.start(); // begin met tellen
+    double verschil = -0.1;
+    bool error = false;
 
 // Hieronder staat een while loop, dit blijft aan totdat het aandraaien van de schroef gelukt is of er een foutmelding gegeven wordt
-while (true) {
+while ((verschil <= schroeflengte) && !error) {
     /*
     * Hieronder wordt de wisseling tussen de switch cases aangestuurd
     * Eerst wordt een bepaalde tijd gewacht totdat er geswitched kan worden, dit zorgt ervoor dat er geen onverwachte uitvoeringen gedaan worden door minescule overwachte imputs
@@ -88,8 +89,17 @@ while (true) {
     */
     if (!aangeraakt && CEEinformatie.get_SchroefAandrukStatus() == 1) {
 
+        // Als er nog geen eerder contact gemaakt is, en er wordt voor het eerst een druk gemeten, dan wordt de positie vastgelegd
+        // vervolgens wordt met deze informatie de positieverschil berekend
+
+        Arminformatie.set_Start();
+        start = Arminformatie.get_Start();
         aangeraakt = true;
-    }
+    } else if (aangeraakt) {
+        huidige = Arminformatie.get_Huidige_Positie();
+        verschil = abs(sqrt(pow(huidige.x - start.x, 2) + pow(huidige.y - start.y, 2) + pow(huidige.z - start.z, 2)));
+    } 
+
 
     if (statuscheck.read_ms() > 50) { // Wacht minstens 0.05s voordat er van case geswitched kan worden    
         if (!Schroefmoment()) { 
@@ -105,7 +115,9 @@ while (true) {
     }
 
     if ((Fouten > 2) && fout) { // Er zijn 3 foute pogingen achter elkaar gemaakt, Er is iets mis, nu gaat het programma uit de functie, hier moet later een error functie voor komen
+        error = true;
         return;
+        break;
     }
 
 
