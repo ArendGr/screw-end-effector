@@ -58,7 +58,77 @@ bool Schroefmoment() {// Hier wordt bepaald naar welke staat van het aandraaien 
         // hoge druk met geen snelheid
         return false;
     }
-    return true;
+
+    bool goedbezig;
+    switch(CEEinformatie.get_SchroefAandrukStatus()) {
+        case 0:
+            if (status == idle) {
+            // geen contact en de schroevendraaier draait niet
+            goedbezig = false; // probeer opnieuw 
+            }
+            else if (status == ZachtDraaien) {
+            // geen contact gemaakt en de schroevendraaier draait zacht, probeer opnieuw, geen foutmelding
+            goedbezig = true;
+            }
+            else { 
+            // geen reden om te controleren voor specefiek normaal of harddraaien, als de schroef nog geen contact heeft gemaakt, mag de schroefendraaier niet harder dan zacht
+            status = AandraaiStatus::idle;
+            goedbezig = false; // probeer opnieuw
+            }
+        break;
+        case 1:
+            if (status == idle) {
+            // de schroef is niet aan het draaien, ga draaien
+            status = AandraaiStatus::ZachtDraaien;
+            goedbezig = true;
+            }
+            else if (status == ZachtDraaien) {
+            // er is contact gemaakt, probeer nu normaal te draaien
+            status = AandraaiStatus::NormaalDraaien;
+            goedbezig = true;
+            }
+            else if (status == NormaalDraaien) {
+            // geen harde druk en het draaien gaat lekker, ga verder met hard draaien
+            status = AandraaiStatus::HardDraaien;
+            goedbezig = true;
+            }
+            else if (status == HardDraaien) {
+            // geen harde druk en het draaien gaat lekker, ga verder
+            goedbezig = true;    
+            }
+        break;
+         case 2:
+            if (status == idle) {
+            // de schroef is niet aan het draaien en er is normale druk, zet de schroef op zachtdraaien voor de zekerheid
+            return false;
+            }
+            else if (status == ZachtDraaien) {
+
+            }
+            else if (status == NormaalDraaien) {
+
+            }
+            else if (status == HardDraaien) {
+                
+            }
+        break;
+         case 3:
+            if (status == idle) {
+
+            }
+            else if (status == ZachtDraaien) {
+
+            }
+            else if (status == NormaalDraaien) {
+
+            }
+            else if (status == HardDraaien) {
+                
+            }
+        break;
+    }
+
+    return goedbezig;
 }
 
 
@@ -70,11 +140,11 @@ void DraaiSchroefAan() { // De boolean geeft aan of het uitvoeren van de functie
     bool fout = false;
     bool aangeraakt = false;
     double schroeflengte;
-    Positie start;
-    Positie huidige;
+    Positie start; // start positie
+    Positie huidige; // huidige positie
     statuscheck.start(); // begin met tellen
     double verschil = 0; 
-    bool error = false;
+    bool error = false; // geen errors
 
 // Hieronder staat een while loop, dit blijft aan totdat het aandraaien van de schroef gelukt is of er een foutmelding gegeven wordt
 while ((verschil <= schroeflengte) && !error) {
