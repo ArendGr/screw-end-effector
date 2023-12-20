@@ -16,7 +16,6 @@ int SchroefAandrukStatus; // int 0 = default, int 1 = geen duk, int 2 = minimaal
 double SchroefLengte; 
 bool BitjeAanweezig, SchroefAanweezig;
 double BitjesLengte = 5;
-double VerwachteSchroefLengte = 15;
 
 public:
 //functions

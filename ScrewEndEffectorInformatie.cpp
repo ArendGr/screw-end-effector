@@ -62,7 +62,7 @@ bool ScrewEndEffectorInformatie::do_measurement(Positie posietie)
             SchroefAanweezig = false; // Schroef is niet aanweezig
         }
 
-        else if (measurement == (BitjesLengte + VerwachteSchroefLengte)) // anders als het meet resultaat gelijk is aan de lengte van de schroef en het bitje
+        else if (measurement > (BitjesLengte + 1)) // anders als het meet resultaat gelijk is aan de lengte van de schroef en het bitje
         { 
             BitjeAanweezig = true; // bitje is aanweezig
             SchroefAanweezig = true; // Schroef is aanweezig
