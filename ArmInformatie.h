@@ -24,6 +24,7 @@ enum Status {
 private:
 Positie huidige;
 Positie oud;
+Positie Start;
 
 Status Request_Status;
 Status Actual_Status;
@@ -31,12 +32,13 @@ Status Actual_Status;
 
 public:
     void set_Gemeten_Positie(Positie positie);
+    void set_Start();
 
     double PositieVerschil(Positie huidige, Positie oud);
 
     Positie get_Huidige_Positie();
     Positie get_Vorige_Positie(Positie oud);
-
+    Positie get_Start();
 
     void set_Request_Status(Status status);
 

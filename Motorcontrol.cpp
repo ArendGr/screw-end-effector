@@ -72,7 +72,11 @@ void DraaiSchroefAan(){ // De boolean geeft aan of het uitvoeren van de functie 
     bool SchroefIsErin = false; // Dit geeft aan dat de schroef er nog niet in is, omdat de functie net is aangeroepen
     int Fouten = 0;
     bool fout = false;
+    bool aangeraakt = false;
+    double schroeflengte;
 
+    Positie Start = Arminformatie.get_Start();
+    Positie huidige = Arminformatie.get_Start();
     statuscheck.start(); // begin met tellen
 
 // Hieronder staat een while loop, dit blijft aan totdat het aandraaien van de schroef gelukt is of er een foutmelding gegeven wordt
@@ -82,6 +86,10 @@ while (true) {
     * Eerst wordt een bepaalde tijd gewacht totdat er geswitched kan worden, dit zorgt ervoor dat er geen onverwachte uitvoeringen gedaan worden door minescule overwachte imputs
     * Dit kan in het uiteindelijke totaalsysteem aangepast worden
     */
+    if (!aangeraakt && CEEinformatie.get_SchroefAandrukStatus() == 1) {
+
+        aangeraakt = true;
+    }
 
     if (statuscheck.read_ms() > 50) { // Wacht minstens 0.05s voordat er van case geswitched kan worden    
         if (!Schroefmoment()) { 
