@@ -7,7 +7,7 @@
 ScrewEndEffectorInformatie screwEndEffectorInformatie;
 ArmInformatie armInformatie;
 
-enum Status {defalt, Verwijder_schroef, Verwijder_bitje, Pak_bitje, Pak_schroef, schroeven}
+enum Status {defalt, Verwijder_schroef, Verwijder_bitje, Schroef_verwijderd, Pak_bitje, bitje_opgepakt, Pak_schroef, schroef_opgepakt, schroeven};
 /*
 * Verschilldende functies:
 * 1. Pak Bit vast
@@ -27,51 +27,150 @@ enum Status {defalt, Verwijder_schroef, Verwijder_bitje, Pak_bitje, Pak_schroef,
 int main()
 {
 
-    double schroefLengte = 15;
+    double schroefLengteMetBit = 15;
     double bitLengte = 5;
     double meetTolerantie = .1;
     double meetResultaat = -1;
-    Status status = Verwijder_schroef;
 
-    bool measure = true;
+    Status status = defalt;
+
+    bool entry = true;
+
+    int number_of_try = 0;
+    int max_number_of_try = 3;
+
     // setup
 
     while (true) 
     {   
-        if (measure) 
+        if (meetResultaat == -1) 
         {
             armInformatie.set_Request_Status(armInformatie.Meten); // zeg tegen de arm dat die moet gaan meten
 
             meetResultaat = screwEndEffectorInformatie.do_measurement(armInformatie.get_Huidige_Positie());
-            if (meetResultaat != -1) 
-            {
-                measure = false;
-            }
         }
         else 
         {
             switch (status) 
             {
-            case Pak_bitje:
+                case defalt:
                 {
-                    armInformatie.set_Request_Status(armInformatie.Pak_bitje); // zeg tegen de arm dat die een bitje moet gaan op pakken
+                    
+                }
+
+                case Pak_bitje:
+                {
+                    if (entry) 
+                    {
+                        armInformatie.set_Request_Status(armInformatie.Pak_bitje); // zeg tegen de arm dat die een bitje moet gaan op pakken
+                        entry = false;
+                    }
 
                     if (screwEndEffectorInformatie.pick_bitje()) // als de arm klaar is met een bitje pakken
                     {  
-                        status = Pak_schroef; // zet de status op pak een schroef
+                        entry = true;
+                        meetResultaat = -1;
+                        status = bitje_opgepakt; // zet de status op pak een schroef
                     }
-                    else if (screwEndEffectorInformatie.pick_bitje())
 
                     break;
                 }
 
-            case Pak_schroef:
+                case bitje_opgepakt:
                 {
-                    
+                    if (meetResultaat < bitLengte + meetTolerantie && meetResultaat > bitLengte - meetTolerantie)
+                    {
+                        number_of_try = 0;
+                        status = Pak_schroef;
+                    }
+                    else if (meetResultaat >= bitLengte + meetTolerantie || number_of_try >= max_number_of_try)
+                    {
+                        armInformatie.set_Request_Status(armInformatie.Wacht);
+                    }
+                    else 
+                    {
+                        number_of_try ++;
+                        status = Pak_bitje;
+                    }
                     break;
                 }
 
-            case(schroeven):
+                case Verwijder_schroef:
+                {
+                    if (entry)
+                    {
+                        armInformatie.set_Request_Status(armInformatie.Verwijder_schroef);
+                        entry = false;
+                    }
+
+                    if (armInformatie.get_Actual_Status() == armInformatie.Verwijder_schroef)
+                    {
+                        entry = false;
+                        status = Pak_schroef;
+                    }
+                    break;
+                }
+
+                case Schroef_verwijderd:
+                {
+                    if (meetResultaat < bitLengte + meetTolerantie && meetResultaat > bitLengte - meetTolerantie)
+                    {
+                        status = Pak_schroef;
+                    }
+                    else if (number_of_try >= max_number_of_try)
+                    {
+                        armInformatie.set_Request_Status(armInformatie.Wacht);
+                    }
+                    else 
+                    {
+                        number_of_try ++;
+                        status = Pak_bitje;
+                    }
+                    break;
+                }
+
+                case Pak_schroef:
+                {
+                    if (entry)
+                    {
+                        armInformatie.set_Request_Status(armInformatie.Pak_schroef);
+                        entry = false;
+                    }
+
+                    if (screwEndEffectorInformatie.pick_screw()) 
+                    {
+                        entry = true;
+                        meetResultaat = -1;
+                        status = schroef_opgepakt;
+                    }
+                    break;
+                }
+
+                case schroef_opgepakt:
+                {
+                    if (meetResultaat < schroefLengteMetBit + meetTolerantie && meetResultaat > schroefLengteMetBit - meetTolerantie)
+                    {
+                        number_of_try = 0;
+                        status = schroeven;
+                    }
+                    else if (number_of_try >= max_number_of_try)
+                    {
+                        armInformatie.set_Request_Status(armInformatie.Wacht);
+                    }
+                    else if (meetResultaat < bitLengte + meetTolerantie)
+                    {
+                        number_of_try ++;
+                        status = Pak_schroef;
+                    }
+                    else 
+                    {
+                        number_of_try ++;
+                        status = Verwijder_schroef;
+                    }
+                    break;
+                }
+
+                case(schroeven):
                 {
                     if () 
                     {
