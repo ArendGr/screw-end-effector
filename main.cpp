@@ -7,7 +7,8 @@
 ScrewEndEffectorInformatie screwEndEffectorInformatie;
 ArmInformatie armInformatie;
 
-enum Status {defalt, Verwijder_schroef, Verwijder_bitje, Schroef_verwijderd, Pak_bitje, bitje_opgepakt, Pak_schroef, schroef_opgepakt, schroeven};
+enum Status {Verwijder_schroef, Schroef_verwijderd, Verwijder_bitje, Bitje_verwijderd, Pak_bitje, bitje_opgepakt, Pak_schroef, schroef_opgepakt, schroeven};
+
 /*
 * Verschilldende functies:
 * 1. Pak Bit vast
@@ -27,38 +28,68 @@ enum Status {defalt, Verwijder_schroef, Verwijder_bitje, Schroef_verwijderd, Pak
 int main()
 {
 
-    double schroefLengteMetBit = 15;
-    double bitLengte = 5;
-    double meetTolerantie = .1;
-    double meetResultaat = -1;
+    double schroefLengteMetBit = 15; // de lengte van een bitje en een schroef (dit dit toevoegen aan arminformatie?)
+    double bitLengte = 5; // de lengte van een bitje (dit toevoegen aan arminformatie?)
+    double meetTolerantie = .1; // de meet tolerantie van het systeem (dit toevoegen aan conductor sensor?)
+    double meetResultaat = -1; // het opgeslagen meetresultaat
 
-    Status status = defalt;
+    Status status = Schroef_verwijderd; // de status ven het systeem is standaard controleren of een schroef is verijderd
 
     bool entry = true;
 
-    int number_of_try = 0;
-    int max_number_of_try = 3;
+    int number_of_try = 0; // het aantal poogingen
+    int max_number_of_try = 3; // het maximaal aantal poogingen
 
-    // setup
+    bool startup = true; // is het stysteem aan het opstarten standaad ja
 
-    while (true) 
+    while (number_of_try <= max_number_of_try) // terwijl het maximaal toegestaan poogingen niet overschreeden is (een stopknop toevoegen?)
     {   
-        if (meetResultaat == -1) 
+        if (meetResultaat == -1) // als er geen meet resulaat is 
         {
             armInformatie.set_Request_Status(armInformatie.Meten); // zeg tegen de arm dat die moet gaan meten
 
-            meetResultaat = screwEndEffectorInformatie.do_measurement(armInformatie.get_Huidige_Positie());
+            meetResultaat = screwEndEffectorInformatie.do_measurement(armInformatie.get_Huidige_Positie()); // sla het meet resultaat op
         }
         else 
         {
-            switch (status) 
+            switch (status)
             {
-                case defalt:
+                case Verwijder_bitje: // verwijder een bitje uit de kop
                 {
-                    
+                    if (entry)
+                    {
+                        armInformatie.set_Request_Status(armInformatie.Verwijder_bitje); // zeg tegen de arm dat die een bitje moet verwijderen
+                        entry = false;
+                    }
+
+                    if (screwEndEffectorInformatie.drop_bitje()) // als het bitje verwijderd is
+                    {
+                        entry = true;
+                        meetResultaat = -1; // reset het meetresultaat
+                        status = Bitje_verwijderd;
+                    }
+
+                    break;
                 }
 
-                case Pak_bitje:
+                case Bitje_verwijderd: // controleer of er geen bitje in de kop zit
+                {
+                    if (meetResultaat < meetTolerantie) // als er geen bitje aanwezig is
+                    {
+                        startup = false;
+                        number_of_try = 0; // reset het aantal poogingen
+                        status = Pak_bitje;
+                    }
+                    else 
+                    {
+                        number_of_try ++; // tel een op bij het aantalpoogingen
+                        status = Verwijder_bitje;
+                    }
+
+                    break;
+                }
+
+                case Pak_bitje: // pak een bitje
                 {
                     if (entry) 
                     {
@@ -69,113 +100,121 @@ int main()
                     if (screwEndEffectorInformatie.pick_bitje()) // als de arm klaar is met een bitje pakken
                     {  
                         entry = true;
-                        meetResultaat = -1;
+                        meetResultaat = -1; // resten het meetresultaat
                         status = bitje_opgepakt; // zet de status op pak een schroef
                     }
 
                     break;
                 }
 
-                case bitje_opgepakt:
+                case bitje_opgepakt: // controleer of het bitje opgepakt is
                 {
-                    if (meetResultaat < bitLengte + meetTolerantie && meetResultaat > bitLengte - meetTolerantie)
+                    if (meetResultaat < bitLengte + meetTolerantie && meetResultaat > bitLengte - meetTolerantie) // als er een bitje in de kop zit
                     {
-                        number_of_try = 0;
+                        startup = false; // het systeem is klaar met opstarten
+                        number_of_try = 0; // resten het aantal poogingen
                         status = Pak_schroef;
                     }
-                    else if (meetResultaat >= bitLengte + meetTolerantie || number_of_try >= max_number_of_try)
+                    else if (meetResultaat >= bitLengte + meetTolerantie) // anders als er iets in de kop zit dat langer is dan een bitje
                     {
-                        armInformatie.set_Request_Status(armInformatie.Wacht);
+                        number_of_try = max_number_of_try + 1; // zet het aantal pogingen op maximaal
                     }
-                    else 
+                    else
                     {
-                        number_of_try ++;
+                        number_of_try ++; // tel een op bij het aantalpoogingen
                         status = Pak_bitje;
                     }
+
                     break;
                 }
 
-                case Verwijder_schroef:
+                case Verwijder_schroef: // verwijder een schroef van de kop
                 {
                     if (entry)
                     {
-                        armInformatie.set_Request_Status(armInformatie.Verwijder_schroef);
+                        armInformatie.set_Request_Status(armInformatie.Verwijder_schroef); // zeg tegen de arm dat die een schroef moet verwijderen
                         entry = false;
                     }
 
-                    if (armInformatie.get_Actual_Status() == armInformatie.Verwijder_schroef)
-                    {
-                        entry = false;
-                        status = Pak_schroef;
-                    }
-                    break;
-                }
-
-                case Schroef_verwijderd:
-                {
-                    if (meetResultaat < bitLengte + meetTolerantie && meetResultaat > bitLengte - meetTolerantie)
-                    {
-                        status = Pak_schroef;
-                    }
-                    else if (number_of_try >= max_number_of_try)
-                    {
-                        armInformatie.set_Request_Status(armInformatie.Wacht);
-                    }
-                    else 
-                    {
-                        number_of_try ++;
-                        status = Pak_bitje;
-                    }
-                    break;
-                }
-
-                case Pak_schroef:
-                {
-                    if (entry)
-                    {
-                        armInformatie.set_Request_Status(armInformatie.Pak_schroef);
-                        entry = false;
-                    }
-
-                    if (screwEndEffectorInformatie.pick_screw()) 
+                    if (armInformatie.get_Actual_Status() == armInformatie.Verwijder_schroef) // als de kop zecht dat die klaar is met het verwijderen van de schroef
                     {
                         entry = true;
-                        meetResultaat = -1;
-                        status = schroef_opgepakt;
+                        meetResultaat = -1; // reset het meetresultaat
+                        status = Pak_schroef;
                     }
+
                     break;
                 }
 
-                case schroef_opgepakt:
+                case Schroef_verwijderd: // controleer of de schroef is verwijderd
                 {
-                    if (meetResultaat < schroefLengteMetBit + meetTolerantie && meetResultaat > schroefLengteMetBit - meetTolerantie)
+                    if (meetResultaat < bitLengte + meetTolerantie && meetResultaat > bitLengte - meetTolerantie) // als er geen schroef op het bitje zit
                     {
-                        number_of_try = 0;
+                        if (startup) // als het systeem aan het opstarten is
+                        {
+                            status = Bitje_verwijderd;
+                        }
+                        else 
+                        {
+                            status = Pak_schroef;
+                        }
+                    }
+                    else if (startup && meetResultaat < meetTolerantie) // als het systeem aan het opstarten is en eer geen bitje en schroef op de kop zit
+                    {
+                        startup = false; // het systeem is klaar met opstarten
+                        status = Pak_bitje;
+                    }
+                    else 
+                    {
+                        number_of_try ++; // tel een op bij het aantalpoogingen
+                        status = Verwijder_schroef;
+                    }
+
+                    break;
+                }
+
+                case Pak_schroef: // pak een schroef op
+                {
+                    if (entry)
+                    {
+                        armInformatie.set_Request_Status(armInformatie.Pak_schroef); // zeg tegen de arm dat die een schroef moet oppakken
+                        entry = false;
+                    }
+
+                    if (screwEndEffectorInformatie.pick_screw()) // als er een bitje opgepakt is
+                    {
+                        entry = true;
+                        meetResultaat = -1; // reset het meet resultaat
+                        status = schroef_opgepakt;
+                    }
+
+                    break;
+                }
+
+                case schroef_opgepakt: // controleer of de schroef is opgepakt
+                {
+                    if (meetResultaat < schroefLengteMetBit + meetTolerantie && meetResultaat > schroefLengteMetBit - meetTolerantie) // als de schroef is opgepakt
+                    {
+                        number_of_try = 0; // reset het aantal poogingen
                         status = schroeven;
                     }
-                    else if (number_of_try >= max_number_of_try)
+                    else if (meetResultaat < bitLengte + meetTolerantie) // als er geen schroef op het bitje zit
                     {
-                        armInformatie.set_Request_Status(armInformatie.Wacht);
-                    }
-                    else if (meetResultaat < bitLengte + meetTolerantie)
-                    {
-                        number_of_try ++;
+                        number_of_try ++; // tel een op bij het aantalpoogingen
                         status = Pak_schroef;
                     }
                     else 
                     {
-                        number_of_try ++;
+                        number_of_try ++; // tel een op bij het aantalpoogingen
                         status = Verwijder_schroef;
                     }
+
                     break;
                 }
 
                 case(schroeven):
                 {
-                    if () 
-                    {
-
-                    }
+                    // zet hier je code neer voor het schroeven
 
                     break;
                 }
@@ -183,72 +222,9 @@ int main()
         }
     }
 
+    armInformatie.set_Request_Status(armInformatie.Wacht); // zeg dat de arm stil moet staan
+
+
 }
 
 
-int main()
-{
-    double schroefLengte = 15;
-
-    
-
-    armInformatie.set_Request_Status(armInformatie.Meten); // zeg tegen de arm dat die moet gaan meten
-    while (!screwEndEffectorInformatie.do_measurement(armInformatie.get_Huidige_Positie())); // wacht tot de het meten voltooid is 
-
-    while (screwEndEffectorInformatie.get_SchroefAanweezig()) // waneer er een schroef aanweezig is
-    {
-        armInformatie.set_Request_Status(armInformatie.Verwijder_schroef); // zeg tegen de arm dat die de schroef moet verwijderen
-        while (armInformatie.get_Actual_Status() != armInformatie.Verwijder_schroef); // wacht tot de arm klaar is met verijwderen van de schroef
-
-        armInformatie.set_Request_Status(armInformatie.Meten); // zeg tegen de arm dat die moet gaan meten
-        while (!screwEndEffectorInformatie.do_measurement(armInformatie.get_Huidige_Positie())); // wacht tot de het meten voltooid is
-    }
-
-    while (screwEndEffectorInformatie.get_BitjeAanweezig()) // waneer er een bitje aanweezig is
-    {
-        armInformatie.set_Request_Status(armInformatie.Verwijder_bitje); // zeg tegen de arm dat die de schroef moet verwijderen
-        while (!screwEndEffectorInformatie.drop_bitje());// wacht tot de arm klaar is met verijwderen van de schroef
-
-        armInformatie.set_Request_Status(armInformatie.Meten); // zeg tegen de arm dat die moet gaan meten
-        while (!screwEndEffectorInformatie.do_measurement(armInformatie.get_Huidige_Positie())); // wacht tot de het meten voltooid is
-    }
-
-    while (true) 
-    {   
-        while (!screwEndEffectorInformatie.get_BitjeAanweezig()) // waneer er geen bitje aanwezig is
-        {
-            armInformatie.set_Request_Status(armInformatie.Pak_bitje); // zeg tegen de arm dat die een bitje moet gaan op pakken 
-            while (!screwEndEffectorInformatie.pick_bitje()); // wacht tot het bitje is opgepakt
-
-            armInformatie.set_Request_Status(armInformatie.Meten); // zeg tegen de arm dat die moet gaan meten
-            while (!screwEndEffectorInformatie.do_measurement(armInformatie.get_Huidige_Positie())); // wacht tot de het meten voltooid is
-        }
-
-        while (!(   screwEndEffectorInformatie.get_SchroefLengte() < schroefLengte + 1 
-        &&          screwEndEffectorInformatie.get_SchroefLengte() > schroefLengte - 1)) // waneer de schroeflengte meer dan 1 mm afwijkt
-        {   
-            while (screwEndEffectorInformatie.get_SchroefAanweezig()) // waneer er een schroefaanwezig is
-            {
-                armInformatie.set_Request_Status(armInformatie.Verwijder_schroef);  // zeg tegen de arm dat die de schroef moet verwijderen
-                while (armInformatie.get_Actual_Status() != armInformatie.Verwijder_schroef); // wacht tot de arm klaar is met verijwderen van de schroef
-
-                armInformatie.set_Request_Status(armInformatie.Meten); // zeg tegen de arm dat die moet gaan meten
-                while (!screwEndEffectorInformatie.do_measurement(armInformatie.get_Huidige_Positie())); // wacht tot de het meten voltooid is
-            }
-
-            while (!screwEndEffectorInformatie.get_SchroefAanweezig()) // waneer er geen schroef aanwezig is
-            {
-                armInformatie.set_Request_Status(armInformatie.Pak_schroef); // zeg tegen de arm dat die een schroef moet oppakken
-                while (!screwEndEffectorInformatie.pick_screw()); // wacht tot de schroef is op gepakt
-
-                armInformatie.set_Request_Status(armInformatie.Meten); // zeg tegen de arm dat die moet gaan meten
-                while (!screwEndEffectorInformatie.do_measurement(armInformatie.get_Huidige_Positie())); // wacht tot de het meten voltooid is
-            }
-        }
-
-        
-       
-      
-
-    }
-}
