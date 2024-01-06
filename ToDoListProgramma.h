@@ -1,6 +1,9 @@
 /** Main.cpp
 * Het programma klaarmaken zodat je doormiddel van 2 knopjes op een nucleo kan switchen tussen states 
 * printf functies gebruiken zodat je tijdens het uitvoeren van het programma kan lezen/bijhouden wat er gebeurt
+* Error handling maken 1, het programma moet kunnen aangeven wanneer iets fout gaat of bij welke stap iets fout gaat
+* Error handling maken 2, zorgen dat de while loop pas stopt nadat 3 gefaalde pogingen achter elkaar hebben plaatsgevonden
+* Error handling maken 2, dit zorgt ervoor dat als er een verkeerde error is geweest en daarna geen errors meer worden gedetecteerd de teller weer op 0 komt te staan 
 * task: Jelle
 */
 
