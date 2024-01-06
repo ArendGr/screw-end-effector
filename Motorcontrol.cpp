@@ -25,39 +25,8 @@ bool Schroefmoment() {// Hier wordt bepaald naar welke staat van het aandraaien 
     //In het geval van een foutmelding, wordt idle meegegeven met dat de schroef er niet in is gekomen, daarin wordt de motor uitgezet en wordt de boolean functie met false teruggestuurd
 
     // Meet de afstand tussen de huidige en vorige positie
+    double schroeflengte;
     double afstandsverschil = Arminformatie.PositieVerschil(Arminformatie.get_Huidige_Positie(), Arminformatie.get_Vorige_Positie(positie));
-
-    if (CEEinformatie.get_SchroefAandrukStatus() == 0 && afstandsverschil > 0.1) { 
-        // Geen druk gedetecteerd en schroef heeft nog geen contact gemaakt met het contactoppervlak
-        return false;
-    } else if (CEEinformatie.get_SchroefAandrukStatus() == 1 && (status == ZachtDraaien)) { 
-        // Lichte druk gedetecteerd en schroef heeft contact gemaakt
-        status = AandraaiStatus::NormaalDraaien;
-        return true;
-    } else if (CEEinformatie.get_SchroefAandrukStatus() == 1 && ((status == NormaalDraaien) || (status == HardDraaien))) {
-        // Lichte druk gedetecteerd en we zijn in de NormaalDraaien-status
-        if (afstandsverschil > 0.1) { // als de schroef lekker bezig is, mag die harder gaan.. is efficienter
-        status = AandraaiStatus::HardDraaien;
-        }
-        return true;
-    } else if (CEEinformatie.get_SchroefAandrukStatus() == 3 && (status == HardDraaien)) {
-        // Ideale druk gedetecteerd en we zijn in de NormaalDraaien-status
-        status = AandraaiStatus::ZachtDraaien;
-        return true;
-    } else if (CEEinformatie.get_SchroefAandrukStatus() == 2 && (status == NormaalDraaien)) {
-        // Ideale druk gedetecteerd en we zijn in de NormaalDraaien-status
-        return true;
-    } else if (CEEinformatie.get_SchroefAandrukStatus() == 3 && (status == NormaalDraaien)) {
-        // Te hoge druk gedetecteerd en we zijn in de NormaalDraaien-status
-        // Stop de motor en geef een foutmelding
-        CEEinformatie.set_RPMmotor(0);
-        status = AandraaiStatus::idle;
-        return false;
-    }
-    else if (CEEinformatie.get_SchroefAandrukStatus() == 3 && (status == idle)) {
-        // hoge druk met geen snelheid
-        return false;
-    }
 
     bool goedbezig;
     switch(CEEinformatie.get_SchroefAandrukStatus()) {
@@ -78,7 +47,7 @@ bool Schroefmoment() {// Hier wordt bepaald naar welke staat van het aandraaien 
         break;
         case 1:
             if (status == idle) {
-            // de schroef is niet aan het draaien, ga draaien
+            // de schroef is niet aan het draaien, maar er wordt wel lichte druk gedetecteerd
             status = AandraaiStatus::ZachtDraaien;
             goedbezig = true;
             }
@@ -88,8 +57,7 @@ bool Schroefmoment() {// Hier wordt bepaald naar welke staat van het aandraaien 
             goedbezig = true;
             }
             else if (status == NormaalDraaien) {
-            // geen harde druk en het draaien gaat lekker, ga verder met hard draaien
-            status = AandraaiStatus::HardDraaien;
+            // geen harde druk en het draaien gaat lekker, ga verder
             goedbezig = true;
             }
             else if (status == HardDraaien) {
@@ -99,31 +67,56 @@ bool Schroefmoment() {// Hier wordt bepaald naar welke staat van het aandraaien 
         break;
          case 2:
             if (status == idle) {
-            // de schroef is niet aan het draaien en er is normale druk, zet de schroef op zachtdraaien voor de zekerheid
-            return false;
+            // de schroef is niet aan het draaien en er is normale druk, gooi foutmelding
+            goedbezig = false;
             }
             else if (status == ZachtDraaien) {
-
+            // de schroef is zachtjes ergens in aan het draaien en er is normale druk gedetecteerd. draai nu op normale snelheid    
+            status = AandraaiStatus::NormaalDraaien;    
+            goedbezig = true;    
             }
             else if (status == NormaalDraaien) {
-
+            // de schroef is op normale snelheid met normale druk aan het schroeven, draai nu op harde snelheid
+            status = AandraaiStatus::HardDraaien;
+            goedbezig = true;
             }
             else if (status == HardDraaien) {
-                
+            // de schroef is nu hard aan het draaien met normale druk, ga zo door
+            goedbezig = true;    
             }
         break;
          case 3:
             if (status == idle) {
-
+            // de schroef draait niet maar er is een harde druk gedetecteerd. gooi foutmelding
+            goedbezig = false;
             }
             else if (status == ZachtDraaien) {
+                if(afstandsverschil > (schroeflengte - 0.001)) {
+                    // de schroef is erin!
+                    status = AandraaiStatus::idle;
+                    goedbezig = true;
+                } else {
+                    // de schroef is er nog in, maar is wel een hoge druk, doe niks
+                    status = AandraaiStatus::idle;
+                    goedbezig = false;
+                }
 
             }
             else if (status == NormaalDraaien) {
-
+                if(afstandsverschil > (schroeflengte - 0.001)) {
+                    // de schroef is erin!
+                    status = AandraaiStatus::idle;
+                    goedbezig = true;
+                } else {
+                    // de schroef is er nog in, maar is wel een hoge druk, probeer zacht te draaien
+                    status = AandraaiStatus::ZachtDraaien;
+                    goedbezig = true;
+                }
             }
             else if (status == HardDraaien) {
-                
+                // de schroef is hard aan het draaien met een te hoge druk, ga zachter draaien, geen foutmelding
+                status = AandraaiStatus::NormaalDraaien;
+                    goedbezig = true;
             }
         break;
     }
