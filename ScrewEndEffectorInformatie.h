@@ -19,13 +19,13 @@ double BitjesLengte = 5;
 
 public:
 //functions
-bool pick_bitje();
-bool drop_bitje();
-bool pick_screw();
+bool pick_bitje(); // functie om een bitje op tepakken returns true als het voltooid is anders false
+bool drop_bitje(); // functie om een bitje weg te zetten returns true als het voltooid is anders false
+bool pick_screw(); // functie om een schroef op te pakken returns true als het voltooid is anders false
 
 
-double do_measurement(Positie posietie);
-bool calibrate_measurement(Positie positie);
+double do_measurement(Positie posietie); // functie om meeting te doen returns meetresultaat als het voltooid is anders -1
+bool calibrate_measurement(Positie positie); // functie om de conductor sesnsor te calibreren returns true als het voltooid is anders false
 
 //setters
 void set_BitjesKlemOpen( bool bitjesklemopen );

@@ -4,15 +4,15 @@ class ConductorSensor
 {
     private:
 
-    DigitalIn Touch(p10);
+    DigitalIn Touch(p10); // devineer een pin voor de druk sensor
 
-    double CalibrationValue;
+    double CalibrationValue; // data van de calibratie
 
     public:
 
-    bool get_Touch();
+    bool get_Touch(); // fuctie die controleerd of er stroom loopt naar de gedefineerde pin
 
-    void calibrate(double positie);
+    void calibrate(double positie); // functie die de calibratie uitvoert
 
-    double calculate_Length(double positie);
+    double calculate_Length(double positie); // functie die de lengte van een object vaststeld
 };

@@ -3,7 +3,7 @@
 
 bool Bithandler::get_pressure(int drukstatus)
 {
-    if (drukstatus != 0) 
+    if (drukstatus != 0) // als de drukstatus niet nul is
     {
         return true;
     }

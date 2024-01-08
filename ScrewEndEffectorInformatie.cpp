@@ -2,49 +2,54 @@
 
 bool ScrewEndEffectorInformatie::pick_bitje()
 {
-    set_RPMmotor(10);
-    set_BitjesKlemOpen(true);
-    if (bithandler.get_pressure(SchroefAandrukStatus))
-    {
-        set_RPMmotor(0);
-        set_BitjesKlemOpen(false);
-        return true;
-    }
+    set_RPMmotor(10); // zet de rpm van de motor op 10
 
+    set_BitjesKlemOpen(true); // zet de klem van de bitjes houder open
+
+    if (bithandler.get_pressure(SchroefAandrukStatus)) // als er druk op de kop is
+    {
+        set_RPMmotor(0); // zet de motor rpm op 0
+
+        set_BitjesKlemOpen(false); // zet de klem van de bitjes houder dicht
+
+        return true; // return dat het oppakken voltooid is
+    }
     else 
     {
-        return false;
+        return false; // return dat het oppakken nog niet voltooid is
     }
 
 }
 
 bool ScrewEndEffectorInformatie::drop_bitje()
 {
-    set_BitjesKlemOpen(false);
-    if (bithandler.get_pressure(SchroefAandrukStatus))
-    {
-        set_BitjesKlemOpen(true);
-        return true;
-    }
+    set_BitjesKlemOpen(false); // zet de bitjes klem dicht
 
+    if (bithandler.get_pressure(SchroefAandrukStatus)) // als er duk op de kop is
+    {
+        set_BitjesKlemOpen(true); // zet de bitjes kelm open
+
+        return true; // return dat het bitje verwijderen voltooid is
+    }
     else 
     {
-        return false;
+        return false; // return dat het bitje verwijderen nog niet voltooid is
     }
 }
 
 bool ScrewEndEffectorInformatie::pick_screw()
 {
-    set_RPMmotor(10);
-    if (bithandler.get_pressure(SchroefAandrukStatus))
-    {
-        set_RPMmotor(0);
-        return true;
-    }
+    set_RPMmotor(10); // zet de motor rpm op 10
 
+    if (bithandler.get_pressure(SchroefAandrukStatus)) // als er druk op de kop is
+    {
+        set_RPMmotor(0); // zet de motor rpm op 0
+
+        return true; // return dat het schroef oppakken voltooid is
+    }
     else 
     {
-        return false;
+        return false; // return dat ht schroef oppakken nog niet voltooid is
     }
 }
 
@@ -52,10 +57,12 @@ bool ScrewEndEffectorInformatie::pick_screw()
 
 double ScrewEndEffectorInformatie::do_measurement(Positie positie)
 {
-    if (conductorsensor.get_Touch() == true)
+    if (conductorsensor.get_Touch()) // als of de schroef aangeraakt is
     {
-        SchroefLengte = conductorsensor.calculate_Length(positie.y);
-        return SchroefLengte;
+        SchroefLengte = conductorsensor.calculate_Length(positie.y); // bereken de schroef lengte met de pozitie van de arm in de y richting
+
+
+        return SchroefLengte; // geef de schroef lengte terug
     }
     else {
         return -1;
@@ -64,15 +71,15 @@ double ScrewEndEffectorInformatie::do_measurement(Positie positie)
 
 bool ScrewEndEffectorInformatie::calibrate_measurement(Positie posietie)
 {
-    if (conductorsensor.get_Touch() == true) 
+    if (conductorsensor.get_Touch()) // als de kop aangeraakt is
     {
-        conductorsensor.calibrate(posietie.y);
-        return true;
+        conductorsensor.calibrate(posietie.y); // calibreer de sensor  met de pozitie van de arm in de y richting
+
+        return true; // return dat het clalibreren voltooid is
     }
-    
     else 
     {
-        return false;
+        return false; // return dat het calibreren nog niet voltooid is
     }
 }
 
