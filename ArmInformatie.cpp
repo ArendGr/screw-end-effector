@@ -13,7 +13,7 @@ void ArmInformatie::set_Start() {
     Start = huidige;
 }
 
-double ArmInformatie::PositieVerschil(Positie huidige, Positie oud) {
+double ArmInformatie::positieVerschil(Positie huidige, Positie oud) {
     // Hier wordt de afstand tussen de vorige en huidige meting gemeten
     double verschil = sqrt(pow(huidige.x - oud.x, 2) + pow(huidige.y - oud.y, 2) + pow(huidige.z - oud.z, 2));
 

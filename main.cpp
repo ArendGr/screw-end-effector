@@ -1,13 +1,15 @@
 #include "mbed.h"
 #include "ScrewEndEffectorInformatie.h"
 #include "ArmInformatie.h"
+#include "Motorcontrol.h"
 
 #define Timer_Check     500ms //Dit is de tijd dat het programma wacht totdat er weer gekeken kan worden of een bepaalde functie is uitgevoerd
 
 ScrewEndEffectorInformatie screwEndEffectorInformatie;
 ArmInformatie armInformatie;
+DraaiSchroefAaninformatie DSAI;
 
-enum Status {Verwijder_schroef, Schroef_verwijderd, Verwijder_bitje, Bitje_verwijderd, Pak_bitje, bitje_opgepakt, Pak_schroef, schroef_opgepakt, schroeven};
+enum Status {idle, Verwijder_schroef, Schroef_verwijderd, Verwijder_bitje, Bitje_verwijderd, Pak_bitje, bitje_opgepakt, Pak_schroef, schroef_opgepakt, schroeven};
 
 /*
 * Verschilldende functies:
@@ -54,6 +56,10 @@ int main()
         {
             switch (status)
             {
+                case idle: {
+                    break;
+                }
+
                 case Verwijder_bitje: // verwijder een bitje uit de kop
                 {
                     if (entry)
@@ -214,8 +220,22 @@ int main()
 
                 case(schroeven):
                 {
-                    // zet hier je code neer voor het schroeven
+                    if (entry) {
+                        DSAI.set_laatstestaat(0);
+                        entry = false;
+                    }
 
+                    if (DSAI.DraaiSchroefAan() == false) {
+                        number_of_try ++; // tel een op bij het aantalpoogingen
+                    } else {
+                        number_of_try = 0; // reset het aantal poogingen
+                    }
+
+                    if (DSAI.get_laatstestaat() == 2) {
+                        DSAI.set_laatstestaat(0);
+                        entry = true;
+                        status = idle;
+                    }
                     break;
                 }
             }

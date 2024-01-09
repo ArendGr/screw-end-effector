@@ -1,4 +1,5 @@
 #include "mbed.h"
+#pragma once
 
 struct Positie { //Dit is de positie van het uiteinde van de robotarm waar de ScrewEndEffector op komt te zitten
     public:
@@ -37,7 +38,7 @@ public:
     void set_Start(); //setter start positie
     void set_Request_Status(Status status); // setter request status
 
-    double PositieVerschil(Positie huidige, Positie oud); // hier wordt het positieverschil berekend tussen de huidige positie en de vorige positie
+    double positieVerschil(Positie huidige, Positie oud); // hier wordt het positieverschil berekend tussen de huidige positie en de vorige positie
 
 // getters
     Positie get_Huidige_Positie(); // getter huidige positie

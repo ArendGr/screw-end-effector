@@ -102,6 +102,10 @@ void ScrewEndEffectorInformatie::set_SchroefLengte(int schroeflengte) {
     SchroefLengte = schroeflengte;
 }
 
+void ScrewEndEffectorInformatie::set_SchroefTouch(bool SchroefTouch) {
+    SchroefTouch = Schroeftouch;
+}
+
 void ScrewEndEffectorInformatie::set_Schroefaanwezig(bool schroefaanweezig) {
     SchroefAanweezig = schroefaanweezig;
 }
