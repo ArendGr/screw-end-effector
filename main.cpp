@@ -10,7 +10,7 @@ ScrewEndEffectorInformatie screwEndEffectorInformatie;
 ArmInformatie armInformatie;
 DraaiSchroefAaninformatie DSAI;
 
-enum Status {idle, Verwijder_schroef, Schroef_verwijderd, Verwijder_bitje, Bitje_verwijderd, Pak_bitje, bitje_opgepakt, Pak_schroef, schroef_opgepakt, schroeven};
+enum Status {Verwijder_schroef, Schroef_verwijderd, Verwijder_bitje, Bitje_verwijderd, Pak_bitje, bitje_opgepakt, Pak_schroef, schroef_opgepakt, schroeven};
 
 /*
 * Verschilldende functies:
@@ -45,7 +45,7 @@ int main()
 
     bool startup = true; // is het stysteem aan het opstarten standaad ja
 
-    while (number_of_try <= max_number_of_try) // terwijl het maximaal toegestaan poogingen niet overschreeden is (een stopknop toevoegen?)
+    while (number_of_try < max_number_of_try) // terwijl het maximaal toegestaan poogingen niet overschreeden is (een stopknop toevoegen?)
     {   
         if (meetResultaat == -1) // als er geen meet resulaat is 
         {
@@ -57,10 +57,6 @@ int main()
         {
             switch (status)
             {
-                case idle: {
-                    break;
-                }
-
                 case Verwijder_bitje: // verwijder een bitje uit de kop
                 {
                     if (entry)
