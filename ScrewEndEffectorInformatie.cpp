@@ -69,11 +69,11 @@ double ScrewEndEffectorInformatie::do_measurement(Positie positie)
     }
 }
 
-bool ScrewEndEffectorInformatie::calibrate_measurement(Positie posietie)
+bool ScrewEndEffectorInformatie::calibrate_measurement(Positie positie)
 {
     if (conductorsensor.get_Touch()) // als de kop aangeraakt is
     {
-        conductorsensor.calibrate(posietie.y); // calibreer de sensor  met de pozitie van de arm in de y richting
+        conductorsensor.calibrate(positie.y); // calibreer de sensor  met de pozitie van de arm in de y richting
 
         return true; // return dat het clalibreren voltooid is
     }
