@@ -2,6 +2,7 @@
 #include "ScrewEndEffectorInformatie.h"
 #include "ArmInformatie.h"
 #include "Motorcontrol.h"
+#include "ConductorSensor.h"
 
 #define Timer_Check     500ms //Dit is de tijd dat het programma wacht totdat er weer gekeken kan worden of een bepaalde functie is uitgevoerd
 
