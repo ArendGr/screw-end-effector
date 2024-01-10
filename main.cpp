@@ -4,7 +4,7 @@
 #include "Motorcontrol.h"
 #include "ConductorSensor.h"
 
-#define Timer_Check     500ms //Dit is de tijd dat het programma wacht totdat er weer gekeken kan worden of een bepaalde functie is uitgevoerd
+#define Timer_Wait 50ms //Dit is de tijd dat het programma wacht totdat er weer gekeken kan worden of een bepaalde functie is uitgevoerd
 
 ScrewEndEffectorInformatie screwEndEffectorInformatie;
 ArmInformatie armInformatie;
@@ -47,6 +47,8 @@ int main()
 
     while (number_of_try < max_number_of_try) // terwijl het maximaal toegestaan poogingen niet overschreeden is (een stopknop toevoegen?)
     {   
+        ThisThread::sleep_for(50ms); // wait for one second
+
         if (meetResultaat == -1) // als er geen meet resulaat is 
         {
             armInformatie.set_Request_Status(armInformatie.Meten); // zeg tegen de arm dat die moet gaan meten
@@ -103,7 +105,7 @@ int main()
                     if (screwEndEffectorInformatie.pick_bitje()) // als de arm klaar is met een bitje pakken
                     {  
                         entry = true;
-                        meetResultaat = -1; // resten het meetresultaat
+                        meetResultaat = -1; // reset het meetresultaat
                         status = bitje_opgepakt; // zet de status op pak een schroef
                     }
 
