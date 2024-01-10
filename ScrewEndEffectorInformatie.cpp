@@ -55,6 +55,8 @@ bool ScrewEndEffectorInformatie::pick_screw()
 
 double ScrewEndEffectorInformatie::do_measurement(Positie positie)
 {
+    set_BitjesKlemOpen(false); // zet de klem van de bitjes houder dicht
+    
     if (conductorsensor.get_Touch()) // als of de schroef aangeraakt is
     {
         SchroefLengte = conductorsensor.calculate_Length(positie.y); // bereken de schroef lengte met de pozitie van de arm in de y richting
