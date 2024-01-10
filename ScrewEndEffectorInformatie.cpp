@@ -23,8 +23,6 @@ bool ScrewEndEffectorInformatie::pick_bitje()
 
 bool ScrewEndEffectorInformatie::drop_bitje()
 {
-    set_BitjesKlemOpen(false); // zet de bitjes klem dicht
-
     if (bithandler.get_pressure(SchroefAandrukStatus)) // als er duk op de kop is
     {
         set_BitjesKlemOpen(true); // zet de bitjes kelm open
