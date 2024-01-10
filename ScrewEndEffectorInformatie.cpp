@@ -106,10 +106,10 @@ void ScrewEndEffectorInformatie::set_SchroefTouch(bool SchroefTouch) {
     SchroefTouch = Schroeftouch;
 }
 
-void ScrewEndEffectorInformatie::set_Schroefaanwezig(bool schroefaanweezig) {
-    SchroefAanweezig = schroefaanweezig;
+void ScrewEndEffectorInformatie::set_Schroefaanwezig(bool schroefaanwezig) {
+    SchroefAanwezig = schroefaanwezig;
 }
 
-void ScrewEndEffectorInformatie::set_BitjeAanweezig(bool bitjeaanweezig) {
-    BitjeAanweezig = bitjeaanweezig;
+void ScrewEndEffectorInformatie::set_BitjeAanweezig(bool bitjeaanwezig) {
+    BitjeAanwezig = bitjeaanwezig;
 }

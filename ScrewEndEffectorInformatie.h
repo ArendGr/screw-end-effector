@@ -15,7 +15,7 @@ bool Schroeftouch;
 double RPMmotor; // De RPM van de motor
 int SchroefAandrukStatus; // int 0 = default, int 1 = geen duk, int 2 = minimaale druk, int 3 = goede druk, 4 = maximale druk, 
 double SchroefLengte; 
-bool BitjeAanweezig, SchroefAanweezig;
+bool BitjeAanwezig, SchroefAanwezig;
 double BitjesLengte = 5;
 
 public:
@@ -31,11 +31,11 @@ bool calibrate_measurement(Positie positie); // functie om de conductor sesnsor 
 //setters
 void set_BitjesKlemOpen( bool bitjesklemopen );
 void set_SchroefTouch( bool SchroefTouch );
-void set_RPMmotor( double rpmmotoer );
+void set_RPMmotor( double rpmmotor );
 void set_SchroefAandrukStatus( int schroefaandrukstatus );
 void set_SchroefLengte(int schroeflengte);
-void set_Schroefaanwezig(bool schroefaanweezig);
-void set_BitjeAanweezig(bool bitjeaanweezig);
+void set_Schroefaanwezig(bool schroefaanwezig);
+void set_BitjeAanweezig(bool bitjeaanwezig);
 
 
 //getters
@@ -43,7 +43,7 @@ bool get_SchroefTouch() { return Schroeftouch; };
 double get_RPMmotor(){ return RPMmotor; };
 int get_SchroefAandrukStatus(){ return SchroefAandrukStatus; };
 int get_SchroefLengte(){ return SchroefLengte; };
-bool get_BitjeAanweezig(){ return BitjeAanweezig; };
-bool get_SchroefAanweezig(){ return SchroefAanweezig; };
+bool get_BitjeAanweezig(){ return BitjeAanwezig; };
+bool get_SchroefAanweezig(){ return SchroefAanwezig; };
 
 };
