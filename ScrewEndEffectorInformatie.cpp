@@ -6,7 +6,7 @@ bool ScrewEndEffectorInformatie::pick_bitje()
 
     set_BitjesKlemOpen(true); // zet de klem van de bitjes houder open
 
-    if (bithandler.get_pressure(SchroefAandrukStatus)) // als er druk op de kop is
+    if (bithandler.is_pressure(SchroefAandrukStatus)) // als er druk op de kop is
     {
         set_RPMmotor(0); // zet de motor rpm op 0
 
@@ -23,7 +23,7 @@ bool ScrewEndEffectorInformatie::pick_bitje()
 
 bool ScrewEndEffectorInformatie::drop_bitje()
 {
-    if (bithandler.get_pressure(SchroefAandrukStatus)) // als er duk op de kop is
+    if (bithandler.is_pressure(SchroefAandrukStatus)) // als er duk op de kop is
     {
         set_BitjesKlemOpen(true); // zet de bitjes kelm open
 
@@ -39,7 +39,7 @@ bool ScrewEndEffectorInformatie::pick_screw()
 {
     set_RPMmotor(10); // zet de motor rpm op 10
 
-    if (bithandler.get_pressure(SchroefAandrukStatus)) // als er druk op de kop is
+    if (bithandler.is_pressure(SchroefAandrukStatus)) // als er druk op de kop is
     {
         set_RPMmotor(0); // zet de motor rpm op 0
 
