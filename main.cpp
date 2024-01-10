@@ -231,7 +231,7 @@ int main()
                     if (DSAI.get_laatstestaat() == 2) {
                         DSAI.set_laatstestaat(0);
                         entry = true;
-                        status = idle;
+                        status = bitje_opgepakt;
                     }
                     break;
                 }
