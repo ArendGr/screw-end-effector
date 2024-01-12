@@ -1,6 +1,5 @@
 #include "mbed.h"
 #pragma once
-
 class ConductorSensor
 {
     private:
@@ -18,3 +17,5 @@ class ConductorSensor
 
     double calculate_Length(double positie); // functie die de lengte van een object vaststeld
 };
+
+

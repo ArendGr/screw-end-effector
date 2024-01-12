@@ -47,7 +47,7 @@ int main()
 
     while (number_of_try < max_number_of_try) // terwijl het maximaal toegestaan poogingen niet overschreeden is (een stopknop toevoegen?)
     {   
-        ThisThread::sleep_for(50ms); // wait for one second
+        ThisThread::sleep_for(50); // wait for one second
 
         if (meetResultaat == -1) // als er geen meet resulaat is 
         {
