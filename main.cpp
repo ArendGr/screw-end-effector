@@ -45,6 +45,12 @@ int main()
 
     bool startup = true; // is het stysteem aan het opstarten standaad ja
 
+    if (false) {
+        meetResultaat = -1.01;
+        //status = ;
+    }
+
+
     while (number_of_try < max_number_of_try) // terwijl het maximaal toegestaan poogingen niet overschreeden is (een stopknop toevoegen?)
     {   
         ThisThread::sleep_for(50); // wait for one second
