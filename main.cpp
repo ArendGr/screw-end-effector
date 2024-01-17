@@ -248,8 +248,7 @@ int main()
     }
 
     armInformatie.set_Request_Status(armInformatie.Wacht); // zeg dat de arm stil moet staan
-    armInformatie.
-
+    screwEndEffectorInformatie.set_RPMmotor(0); // zet de motor stil
 }
 
 
