@@ -3,6 +3,8 @@
 #include "ArmInformatie.h"
 #include "Motorcontrol.h"
 #include "ConductorSensor.h"
+#include "ConductorSensor.h"
+
 
 #define Timer_Wait 50ms //Dit is de tijd dat het programma wacht totdat er weer gekeken kan worden of een bepaalde functie is uitgevoerd
 
